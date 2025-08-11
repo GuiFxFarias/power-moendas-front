@@ -14,12 +14,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { setCookie } from 'cookies-next';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const loginSchema = z.object({
   email: z.string().email('Por favor, insira um email válido.'),
@@ -35,7 +34,6 @@ export default function LoginPageComponente() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const searchParams = useSearchParams();
 
   const form = useForm<IForm>({
     resolver: zodResolver(loginSchema),
@@ -45,28 +43,21 @@ export default function LoginPageComponente() {
     },
   });
 
-  const assinatura = searchParams.get('assinatura');
-
   async function onSubmit(values: IForm) {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/login${
-          assinatura == 'true' ? '?assinatura=true' : ''
-        }`,
-        {
-          method: 'POST',
-          body: JSON.stringify(values),
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: { 'Content-Type': 'application/json' },
+      });
 
       const resJson = await res.json();
 
       if (res.ok) {
         const usuario = resJson.usuario;
-        const { token, tenant_id, expiration } = resJson.value;
+        const { token, expiration } = resJson.value;
 
         setCookie('token', token, {
           expires: new Date(expiration),
@@ -78,15 +69,10 @@ export default function LoginPageComponente() {
         });
 
         sessionStorage.setItem('token', token);
-        sessionStorage.setItem('tenant_id', tenant_id);
-        sessionStorage.setItem(
-          'acessoLiberado',
-          usuario.acesso_liberado ? 'true' : 'false'
-        );
         sessionStorage.setItem('usuarioEmail', usuario.email);
 
         toast.success('Login realizado');
-        router.push('/calendar');
+        router.push('/dashboards');
       } else {
         toast.error(`Autenticação falhou: ${resJson?.erro}`);
       }
@@ -169,6 +155,15 @@ export default function LoginPageComponente() {
             </Button>
           </form>
         </Form>
+
+        <div className='flex justify-between text-sm text-zinc-600 dark:text-zinc-400'>
+          <Link
+            href='/register'
+            className='hover:underline text-blue-600 dark:text-blue-400'
+          >
+            Criar conta
+          </Link>
+        </div>
       </div>
     </div>
   );

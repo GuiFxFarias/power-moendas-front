@@ -5,8 +5,8 @@ import { Analytics } from '@vercel/analytics/next';
 import Query from './layoutCliente'; // client component
 
 export const metadata = {
-  title: 'GCalendar - Sistema de Agendamento',
-  description: 'Agendamento fácil para clínicas, consultórios e prestadores',
+  title: 'Power Moendas',
+  description: 'Dashboards e integrações',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -58,16 +58,7 @@ export default function RegisterPage() {
   });
 
   const onSubmit = (values: FormValues) => {
-    const agora = new Date();
-    const inicioTesteFormatado = agora
-      .toISOString()
-      .slice(0, 19)
-      .replace('T', ' ');
-
-    cadastrar({
-      ...values,
-      inicio_teste_gratis: inicioTesteFormatado,
-    });
+    cadastrar(values);
   };
 
   return (

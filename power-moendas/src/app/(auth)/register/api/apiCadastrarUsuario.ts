@@ -3,7 +3,6 @@ interface CadastrarPayload {
   email: string;
   telefone: string;
   senha: string;
-  inicio_teste_gratis: string;
 }
 
 export async function apiCadastrarUsuario(payload: CadastrarPayload) {
