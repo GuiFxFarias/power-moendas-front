@@ -1,16 +1,20 @@
 'use client';
 import { ReactNode, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Logo from '../../../public/image/PM.jpg';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from '@/components/ui/sheet';
 
 export default function SidebarLayout({ children }: { children: ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const [open, setOpen] = useState(false);
 
   const LogoutButton = ({ className = '' }) => (
     <Button
@@ -31,108 +35,67 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className='min-h-screen bg-gray-50'>
-      {/* Header com botão de menu */}
-      <header className='bg-white shadow-sm border-b border-gray-200 px-4 py-3'>
-        <div className='flex justify-between items-center'>
-          <div className='flex items-center justify-between w-[40%] max-md:w-[50%] '>
-            <Image
-              src={Logo}
-              alt='Logo G-Tech'
-              className='w-32 h-auto rounded-lg max-md:mr-2'
-            />
-            <h1 className='text-xl font-semibold text-gray-800'>
-              PPCP{' '}
-              <span className='max-md:hidden'>
-                - Planejamento Programação Controle Produção
-              </span>
-            </h1>
-          </div>
-          <button
-            onClick={toggleSidebar}
-            className='p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer'
-          >
-            <Menu className='w-6 h-6 text-gray-600' />
-          </button>
+      {/* Fixed Top Navbar */}
+      <header className='fixed top-0 left-0 right-0 bg-white shadow-sm border-b border-gray-200 z-50'>
+        <div className='w-full px-4 py-3 flex items-center justify-between'>
+          <h1 className='text-xl font-semibold text-gray-800'>
+            PPCP{' '}
+            <span className='max-md:hidden'>
+              - Planejamento Programação Controle Produção
+            </span>
+          </h1>
+
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <button
+                className='p-2 rounded-lg hover:bg-gray-100 transition-colors'
+                aria-label='Open menu'
+              >
+                <Menu className='w-6 h-6 text-gray-700' />
+              </button>
+            </SheetTrigger>
+
+            {/* Right drawer; Radix handles overlay, ESC close, focus, and scroll lock */}
+            <SheetContent side='right' className='w-80 p-0'>
+              <SheetHeader className='p-4 border-b'>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+
+              {/* Logo */}
+              <div className='p-6 border-b'>
+                <div className='flex items-center justify-center'>
+                  <Image
+                    src={Logo}
+                    alt='Logo G-Tech'
+                    className='w-32 h-auto rounded-lg'
+                  />
+                </div>
+              </div>
+
+              {/* Nav */}
+              <nav className='p-4 space-y-2'>
+                <SheetClose asChild>
+                  <a
+                    href='/dashboards'
+                    className='block px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700'
+                  >
+                    Dashboard
+                  </a>
+                </SheetClose>
+                {/* Add more links here */}
+              </nav>
+
+              {/* Footer */}
+              <div className='p-4 border-t mt-auto'>
+                <LogoutButton />
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </header>
 
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className='fixed inset-0 bg-black opacity-50 z-40 transition-opacity '
-          onClick={toggleSidebar}
-        />
-      )}
-
-      {/* Sidebar */}
-      <div
-        className={`
-        fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : 'translate-x-full'}
-      `}
-      >
-        <div className='flex flex-col h-full'>
-          {/* Header do Sidebar */}
-          <div className='flex items-center justify-between p-4 border-b border-gray-200'>
-            <h2 className='text-lg font-semibold text-gray-800'>Menu</h2>
-            <button
-              onClick={toggleSidebar}
-              className='p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer'
-            >
-              <X className='w-5 h-5 text-gray-600 cursor-pointer' />
-            </button>
-          </div>
-
-          {/* Logo da Empresa */}
-          <div className='p-6 border-b border-gray-200'>
-            <div className='flex items-center justify-center'>
-              <div className='rounded-xl flex items-center justify-center'>
-                <Image
-                  src={Logo}
-                  alt='Logo G-Tech'
-                  className='w-32 h-auto rounded-lg'
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Conteúdo do Sidebar */}
-          <div className='flex-1 p-4'>
-            <nav className='space-y-2'>
-              <a
-                href='/dashboards'
-                className='flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors'
-              >
-                <span>Dashboard</span>
-              </a>
-              {/* <a
-                href='#'
-                className='flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors'
-              >
-                <span>Usuários</span>
-              </a>
-              <a
-                href='#'
-                className='flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors'
-              >
-                <span>Configurações</span>
-              </a> */}
-            </nav>
-          </div>
-
-          {/* Footer com botão de logout */}
-          <div className='p-4 border-t border-gray-200'>
-            <LogoutButton />
-          </div>
-        </div>
-      </div>
-
-      {/* Conteúdo principal */}
-
-      <main className='p-6'>
-        <div className='w-full h-full' />
-        {children}
-      </main>
+      {/* Page content (offset for fixed navbar height ~64px) */}
+      <main className='pt-16 p-6'>{children}</main>
     </div>
   );
 }
