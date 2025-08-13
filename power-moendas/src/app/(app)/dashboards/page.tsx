@@ -1,6 +1,13 @@
 export default function Home() {
   return (
-    <div className='mx-auto w-full flex items-center justify-center'>
+    <div className='mx-auto w-full flex items-center justify-center flex-col z-10'>
+      <div className='flex flex-col items-start'>
+        <h1 className='text-4xl mb-4 max-md:text-2xl'>
+          Gerenciamento Carteira Power Moendas
+        </h1>
+        <h2 className='text-2xl mb-4 max-md:text-xl'>GESTÃO DO PLANEJAMENTO</h2>
+      </div>
+
       <iframe
         className='border border-black rounded-md'
         title='Dashboard Power'

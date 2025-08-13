@@ -34,7 +34,19 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
       {/* Header com botão de menu */}
       <header className='bg-white shadow-sm border-b border-gray-200 px-4 py-3'>
         <div className='flex justify-between items-center'>
-          <h1 className='text-xl font-semibold text-gray-800'>Dashboard</h1>
+          <div className='flex items-center justify-between w-[40%] max-md:w-[50%] '>
+            <Image
+              src={Logo}
+              alt='Logo G-Tech'
+              className='w-32 h-auto rounded-lg max-md:mr-2'
+            />
+            <h1 className='text-xl font-semibold text-gray-800'>
+              PPCP{' '}
+              <span className='max-md:hidden'>
+                - Planejamento Programação Controle Produção
+              </span>
+            </h1>
+          </div>
           <button
             onClick={toggleSidebar}
             className='p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer'
@@ -116,7 +128,11 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
       </div>
 
       {/* Conteúdo principal */}
-      <main className='p-6'>{children}</main>
+
+      <main className='p-6'>
+        <div className='w-full h-full' />
+        {children}
+      </main>
     </div>
   );
 }
